@@ -6,7 +6,7 @@ body {
 }
 
 #form {
-  background: rgba(0, 0, 0, 0.15);
+  background: rgb(0, 0, 0);
   padding: 0.25rem;
   position: fixed;
   bottom: 0;
@@ -35,6 +35,11 @@ body {
   border-radius: 3px;
   outline: none;
   color: #fff;
+  cursor: pointer;
+}
+
+#form > button:hover {
+  background: #333333b9;
 }
 
 #messages {
