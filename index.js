@@ -10,7 +10,7 @@ const db = await open({
   driver: sqlite3.Database,
 });
 
-await db.exec(`DELETE FROM messages`);
+// await db.exec(`DELETE FROM messages`);
 
 await db.exec(`
       CREATE TABLE IF NOT EXISTS messages (
