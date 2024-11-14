@@ -10,6 +10,8 @@ const db = await open({
   driver: sqlite3.Database,
 });
 
+await db.exec(`DELETE FROM messages`);
+
 await db.exec(`
       CREATE TABLE IF NOT EXISTS messages (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,18 +29,24 @@ const io = new Server(server, {
 app.use(express.static("public"));
 
 io.on("connection", async (socket) => {
-  socket.on("chat message", async (msg, callback) => {
-    callback({
-      status: "ok",
-    });
-
+  socket.on("chat message", async (msg, clientOffset, callback) => {
     let result;
     try {
-      result = await db.run("INSERT INTO messages (content) VALUES (?)", msg);
+      result = await db.run(
+        "INSERT INTO messages (content, client_offset) VALUES (?, ?)",
+        msg,
+        clientOffset
+      );
     } catch (e) {
+      if (e.errno === 19) {
+        // callback();
+      } else {
+        // do nothing
+      }
       return;
     }
     io.emit("chat message", msg, result.lastID);
+    // callback();
   });
 
   if (!socket.recovered) {
